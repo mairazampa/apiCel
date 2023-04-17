@@ -10,7 +10,24 @@
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
+      
+
     },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Necesitamoss acceso a tus fotos para enviarla en el chat."
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Permite a $(PRODUCT_NAME) acceder a la cámara."
+        }
+      ]
+    ],
+    
     "assetBundlePatterns": [
       "**/*"
     ],
