@@ -1,47 +1,87 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
 import { HomeScreen } from "../screen/HomeScreen";
 import { ChatScreen } from "../screen/ChatScreen";
 import { ROUTES } from "./routes";
 import { ImageScreen } from "../screen/ImageScreen";
-import { VoiceScreen } from "../screen/VoiceScreen";
+import { CameraScreen } from "../screen/CameraScreen";
+import { Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
+const ImageStack = createStackNavigator();
+const ImageNavigator = () => (
+  <ImageStack.Navigator screenOptions={{ headerShown: false }}>
+    <ImageStack.Screen name={ROUTES.IMAGE_CHANNEL} component={ImageScreen} />
+    <ImageStack.Screen name={ROUTES.CAMERA} component={CameraScreen} />
+  </ImageStack.Navigator>
+);
+
+const CustomTabBarIcon = ({ focused, iconName, label }) => (
+  <View
+    style={{
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 5,
+      backgroundColor: focused ? "black" : "transparent",
+      padding: 10,
+      borderRadius: 30,
+      height: 40,
+    }}
+  >
+    <Ionicons name={iconName} size={20} color={focused ? "white" : "#72777A"} />
+    {focused && <Text style={{ color: "white" }}>{label}</Text>}
+  </View>
+);
+
+const TabNavigator = () => (
+  <Tab.Navigator
+    screenOptions={{
+      headerShown: false,
+      tabBarShowLabel: false,
+      tabBarHideOnKeyboard: true,
+    }}
+  >
+    <Tab.Screen
+      name={ROUTES.HOME}
+      component={HomeScreen}
+      options={{
+        tabBarIcon: ({ focused }) => (
+          <CustomTabBarIcon focused={focused} iconName="home" label="INICIO" />
+        ),
+      }}
+    />
+    <Tab.Screen
+      name={ROUTES.CHAT}
+      component={ChatScreen}
+      options={{
+        tabBarIcon: ({ focused }) => (
+          <CustomTabBarIcon
+            focused={focused}
+            iconName="chatbubbles-sharp"
+            label="TEXTO"
+          />
+        ),
+      }}
+    />
+    <Tab.Screen
+      name={ROUTES.IMAGE}
+      component={ImageNavigator}
+      options={{
+        tabBarIcon: ({ focused }) => (
+          <CustomTabBarIcon focused={focused} iconName="image" label="IMAGEN" />
+        ),
+      }}
+    />
+  </Tab.Navigator>
+);
 
 const RootNavigation = () => (
   <NavigationContainer>
-    <Tab.Navigator screenOptions={{ headerShown: false }}>
-      <Tab.Screen name={ROUTES.HOME} component={HomeScreen} 
-      options={{
-        title: "Inicio",
-        tabBarIcon: ({ color, size }) => (
-          <Ionicons name="ios-home" size={size} color={color} />
-        )
-      }}/>
-      <Tab.Screen name={ROUTES.CHAT} component={ChatScreen} 
-      options={{
-        title: "Chat",
-        tabBarIcon: ({ color, size }) => (
-          <Ionicons name="chatbubbles-sharp" size={size} color={color} />
-        )
-      }}/>
-      <Tab.Screen name={ROUTES.IMAGE} component={ImageScreen} 
-      options={{
-        title: "Imagen",
-        tabBarIcon: ({ color, size }) => (
-          <Ionicons name="image-sharp" size={size} color={color} />
-        )
-      }}/>
-      <Tab.Screen name={ROUTES.VOICE} component={VoiceScreen} 
-      options={{
-        title: "Voz",
-        tabBarIcon: ({ color, size }) => (
-          <Ionicons name="mic-sharp" size={size} color={color} />
-        )
-      }}/>
-    </Tab.Navigator>
+    <TabNavigator />
   </NavigationContainer>
 );
+
 
 export { RootNavigation };

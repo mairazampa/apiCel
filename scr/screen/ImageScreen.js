@@ -2,74 +2,155 @@ import {
   Button,
   Image,
   SafeAreaView,
+  Dimensions,
+  KeyboardAvoidingView,
   ScrollView,
   StyleSheet,
   Text,
   View,
+  Keyboard,
 } from "react-native";
+import { useRef,useEffect, useState } from "react";
 import { launchImageLibraryAsync, MediaTypeOptions } from "expo-image-picker";
-import { useState } from "react";
+import { Ionicons } from "@expo/vector-icons";
 import Constants from "expo-constants";
+import { Header } from "../components/Header";
 import { CustomCamera } from "../components/CustomCamera";
+import { SafeScreen } from "../components/SafeScreen";
+import {
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
+import { ROUTES } from "../navegation/routes";
+import { sendImageToChatbot } from "../services/iaservices";
+import { incrementImageResponsesCount } from "../services/cuenta";
+import { UserTextMessage } from "../components/UserTextMessage";
+import { IaTextMessage } from "../components/IaTextMessage";
 
 const ImageScreen = () => {
-  const [image, setImage] = useState(null);
+const navigation = useNavigation();
+  const params = useRoute().params;
+  const isFocused = useIsFocused();
+  const [question, setQuestion] = useState("");
+  const [chatMessages, setChatMessages] = useState([]);
+  const scrollViewRef = useRef(null);
 
-  const _handleGalleryPress = async () => {
+  const fetchApi = async (message) => {
     try {
-      // No permissions request is necessary for launching the image library
-      let result = await launchImageLibraryAsync({
-        mediaTypes: MediaTypeOptions.Images,
-      });
-
-      console.log(result);
-
-      if (result.canceled) {
-        console.warn("CANCELADO");
-        return;
+      const answer = await sendQuestionToChatbot(message);
+      let mensajeFinal = answer.mensaje;
+      if (!answer.error) {
+        incrementImageResponsesCount();
+      } else {
+        const mensajeFinal = `ERROR: ${mensajeFinal}`;
       }
 
-      setImage(result.assets[0].uri);
+      setChatMessages((chatMessages) =>
+        chatMessages.concat({ message: mensajeFinal, isUser: false })
+      );
     } catch (error) {
-      console.warn(error);
+      console.warn("ERROR", error);
     }
   };
 
+  const _addUserMessage = () => {
+    Keyboard.dismiss();
+    if (question !== "") {
+      setChatMessages(chatMessages.concat({ message: question, isUser: true }));
+      fetchApi(question);
+      setQuestion("");
+    }
+  };
+  const sendImage = async (imageUri) => {
+    const responseImg = await sendImageToChatbot(imageUri);
+    setChatMessages((chatMessages) =>
+      chatMessages.concat({ imageUri: responseImg, isUser: false })
+    );
+  };
+
+  useEffect(() => {
+    if (isFocused && params?.imageUri) {
+      setChatMessages((chatMessages) =>
+        chatMessages.concat({ imageUri: params.imageUri, isUser: true })
+      );
+      sendImage(params.imageUri);
+      navigation.setParams({ imageUri: undefined });
+    }
+  }, [isFocused, params]);
+
   return (
-    <SafeAreaView style={styles.container}>
-      <Text>ImageScreen</Text>
-      <ScrollView>
-        <View>
-          <Button
-            title="Elegir desde la galería"
-            onPress={_handleGalleryPress}
-          />
-          {image !== null ? (
-            <Image source={{ uri: image }} style={styles.box} />
-          ) : (
-            <View style={[styles.box, { backgroundColor: "grey" }]} />
+    <SafeScreen>
+      <Header title="Canal de Imagen" />
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior="position">
+        <ScrollView
+          style={styles.messagesContainer}
+          contentContainerStyle={{ gap: 20 }}
+          ref={scrollViewRef}
+          onContentSizeChange={() =>
+            scrollViewRef.current.scrollToEnd({ animated: true })
+          }
+        >
+          {chatMessages.map((msg, index) =>
+            msg.isUser ? (
+              <UserTextMessage message={msg.message} key={index} />
+            ) : (
+              <IaTextMessage message={msg.message} key={index} />
+            )
           )}
-        </View>
+        </ScrollView>
         <View
-          style={{ marginVertical: 10, height: 15, backgroundColor: "blue" }}
-        />
-        <CustomCamera />
-      </ScrollView>
-    </SafeAreaView>
+          style={{ flexDirection: "row", justifyContent: "center", gap: 10 }}
+        >
+          <View style={styles.inputContainer}>
+            <Ionicons
+              name="camera"
+              size={24}
+              color="white"
+              onPress={() => navigation.navigate(ROUTES.CAMERA)}
+            />
+            <Ionicons 
+            name="image" 
+            size={24} 
+            color="white" 
+            onPress={() => navigation.navigate(ROUTES.IMAGE_CHANNEL)}/>
+          </View>
+          <Ionicons.Button
+            name="ios-paper-plane-outline"
+            size={24}
+            color="white"
+            backgroundColor="#303437"
+            borderRadius={24}
+            iconStyle={{ marginLeft: 5, marginTop: 2 }}
+            onPress={_addUserMessage}
+          />
+        </View>
+      </KeyboardAvoidingView>
+    </SafeScreen>
   );
 };
 
-export { ImageScreen };
+
+
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    gap: 20,
-    marginTop: Constants.statusBarHeight,
+    justifyContent: "space-between",
     alignItems: "center",
   },
-  box: {
-    width: 200,
-    height: 200,
+  messagesContainer: {
+    height: Dimensions.get("screen").height * 0.7,
+    marginHorizontal: 10,
+  },
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: "black",
+    width: 100,
+    padding: 10,
   },
 });
+
+export { ImageScreen };
