@@ -4,6 +4,7 @@ const VoiceScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Text>VoiceScreen</Text>
+      
     </SafeAreaView>
   );
 };
@@ -16,4 +17,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
+
+  
 });

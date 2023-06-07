@@ -1,38 +1,36 @@
 import {
-  Button,
   KeyboardAvoidingView,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
-  Text,
   TextInput,
   View,
   Dimensions,
   Keyboard,
 } from "react-native";
-import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
+import { Ionicons} from "@expo/vector-icons";
 import { Header } from "../components/Header";
 import { sendQuestionToChatbot } from "../services/iaservices";
 import { UserTextMessage } from "../components/UserTextMessage";
 import { IaTextMessage } from "../components/IaTextMessage";
 import { SafeScreen } from "../components/SafeScreen";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { incrementTextResponsesCount } from "../services/cuenta";
 
 
 const ChatScreen = () => {
   const [question, setQuestion] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
+  const scrollViewRef = useRef(null);
 
   const fetchApi = async (message) => {
     try {
       const answer = await sendQuestionToChatbot(message);
       let mensajeFinal = answer.mensaje;
-      if (!answer.error) {
+       if (!answer.error) {
         incrementTextResponsesCount();
-      } else {
-        const mensajeFinal = `ERROR: ${mensajeFinal}`;
-      }
+       } else {
+         const mensajeFinal = `ERROR: ${mensajeFinal}`;
+       }
 
       setChatMessages((chatMessages) =>
         chatMessages.concat({ message: mensajeFinal, isUser: false })
@@ -57,8 +55,13 @@ const ChatScreen = () => {
       <KeyboardAvoidingView style={{ flex: 1 }} behavior="position">
         <ScrollView
           style={styles.messagesContainer}
-          contentContainerStyle={{ gap: 20 }}
-        >
+          contentContainerStyle={{ gap: 20 , paddingBottom: 20}}
+          //lo usamos para que los mensajes vayan subiendo 
+          //asi no tenemos que bajar cada vez que enviamos una consulta
+          ref={scrollViewRef}
+          onContentSizeChange={() =>
+            scrollViewRef.current.scrollToEnd({ animated: true })
+          }>
           {chatMessages.map((msg, index) =>
             msg.isUser ? (
               <UserTextMessage message={msg.message} key={index} />
@@ -78,6 +81,7 @@ const ChatScreen = () => {
               onSubmitEditing={_addUserMessage}
             />
           </View>
+    
           <Ionicons.Button
             name="ios-paper-plane-outline"
             size={24}

@@ -25,59 +25,58 @@ import {
 import { ROUTES } from "../navegation/routes";
 import { sendImageToChatbot } from "../services/iaservices";
 import { incrementImageResponsesCount } from "../services/cuenta";
-import { UserTextMessage } from "../components/UserTextMessage";
-import { IaTextMessage } from "../components/IaTextMessage";
-
+import { UserImageMessage } from "../components/UserImageMessage";
+import { IaImageMessage } from "../components/IaImageMessage";
+import * as ImagePicker from 'expo-image-picker';
 const ImageScreen = () => {
 const navigation = useNavigation();
-  const params = useRoute().params;
-  const isFocused = useIsFocused();
-  const [question, setQuestion] = useState("");
-  const [chatMessages, setChatMessages] = useState([]);
-  const scrollViewRef = useRef(null);
+const params = useRoute().params;
+const isFocused = useIsFocused();
+const [chatMessages, setChatMessages] = useState([]);
+const scrollViewRef = useRef(null);
 
-  const fetchApi = async (message) => {
-    try {
-      const answer = await sendQuestionToChatbot(message);
-      let mensajeFinal = answer.mensaje;
-      if (!answer.error) {
-        incrementImageResponsesCount();
-      } else {
-        const mensajeFinal = `ERROR: ${mensajeFinal}`;
-      }
 
-      setChatMessages((chatMessages) =>
-        chatMessages.concat({ message: mensajeFinal, isUser: false })
-      );
-    } catch (error) {
-      console.warn("ERROR", error);
+
+
+  //la siguiente funcion para sacar fotos con la camara 
+  const addUserImage = (imageUri) => {
+    console.log("Ruta de la imagen que sacamos", imageUri)
+    setChatMessages((chatMessages) =>
+      chatMessages.concat({ message: imageUri, isUser: true })
+    );
+    sendImage(imageUri);
+    console.log("Enviamos la siguiente ruta a Send Image", imageUri)
+  };
+
+  //seleccionamos de la galeria 
+ 
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({  
+    });
+    if (!result.canceled) {
+      addUserImage(result.assets[0].uri);
     }
   };
 
-  const _addUserMessage = () => {
-    Keyboard.dismiss();
-    if (question !== "") {
-      setChatMessages(chatMessages.concat({ message: question, isUser: true }));
-      fetchApi(question);
-      setQuestion("");
-    }
-  };
+
+  //aca me devuelve la imagen la API 
   const sendImage = async (imageUri) => {
     const responseImg = await sendImageToChatbot(imageUri);
+    console.log("La ruta que enviamos a send IMageToChatbot", imageUri)
+    if (!responseImg.error){
+      incrementImageResponsesCount();
+    }
     setChatMessages((chatMessages) =>
-      chatMessages.concat({ imageUri: responseImg, isUser: false })
+      
+      chatMessages.concat({ message: responseImg, isUser: false })
     );
   };
+   
 
-  useEffect(() => {
-    if (isFocused && params?.imageUri) {
-      setChatMessages((chatMessages) =>
-        chatMessages.concat({ imageUri: params.imageUri, isUser: true })
-      );
-      sendImage(params.imageUri);
-      navigation.setParams({ imageUri: undefined });
-    }
-  }, [isFocused, params]);
+
+
+       chatMessages.concat({ message: (chatMessages), isUser: false })
+  
 
   return (
     <SafeScreen>
@@ -85,7 +84,7 @@ const navigation = useNavigation();
       <KeyboardAvoidingView style={{ flex: 1 }} behavior="position">
         <ScrollView
           style={styles.messagesContainer}
-          contentContainerStyle={{ gap: 20 }}
+          contentContainerStyle={{ gap: 20 , paddingBottom: 20 }}
           ref={scrollViewRef}
           onContentSizeChange={() =>
             scrollViewRef.current.scrollToEnd({ animated: true })
@@ -93,13 +92,16 @@ const navigation = useNavigation();
         >
           {chatMessages.map((msg, index) =>
             msg.isUser ? (
-              <UserTextMessage message={msg.message} key={index} />
-            ) : (
-              <IaTextMessage message={msg.message} key={index} />
-            )
+              <UserImageMessage style={{ justifyContent: "center" }} message={msg.message} key={index} />
+            ) : 
+             (
+               <IaImageMessage message={msg.message} key={index} />
+             )
           )}
         </ScrollView>
+      
         <View
+        //agregamos un div para los botones de camara y galeria 
           style={{ flexDirection: "row", justifyContent: "center", gap: 10 }}
         >
           <View style={styles.inputContainer}>
@@ -107,23 +109,22 @@ const navigation = useNavigation();
               name="camera"
               size={24}
               color="white"
-              onPress={() => navigation.navigate(ROUTES.CAMERA)}
+              onPress={() => {
+                // navego a la pantalla de camara y le paso un objeto que podrá usar
+                // el objeto tiene una propiedad addUserImage con la definicion de la funcion
+                // de igual nombre
+                // de esta forma la pantalla de camara podrá usarla
+                navigation.navigate(ROUTES.CAMERA, {addUserImage: addUserImage })}
+              }
             />
             <Ionicons 
             name="image" 
             size={24} 
             color="white" 
-            onPress={() => navigation.navigate(ROUTES.IMAGE_CHANNEL)}/>
+            onPress={pickImage}
+            />
+            
           </View>
-          <Ionicons.Button
-            name="ios-paper-plane-outline"
-            size={24}
-            color="white"
-            backgroundColor="#303437"
-            borderRadius={24}
-            iconStyle={{ marginLeft: 5, marginTop: 2 }}
-            onPress={_addUserMessage}
-          />
         </View>
       </KeyboardAvoidingView>
     </SafeScreen>
@@ -141,15 +142,20 @@ const styles = StyleSheet.create({
   },
   messagesContainer: {
     height: Dimensions.get("screen").height * 0.7,
-    marginHorizontal: 10,
+    marginHorizontal: 20,
+    
+    borderColor: "#979C9E",
   },
   inputContainer: {
+    
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     backgroundColor: "black",
     width: 100,
     padding: 10,
+   
+    
   },
 });
 

@@ -1,6 +1,3 @@
-
-
-
 const BASE_URL = "https://tnt2023.panaltesting.com.ar";
 
 const sendQuestionToChatbot = async (message) => {
@@ -9,7 +6,9 @@ const sendQuestionToChatbot = async (message) => {
    };
    
    const sendImageToChatbot = async (imageUri) => {
-     let formData = new FormData();
+    console.log("lo que le llega a sendImage", imageUri)
+    
+    let formData = new FormData();
      formData.append("image", {
        uri: imageUri,
        name: "image.jpg",
