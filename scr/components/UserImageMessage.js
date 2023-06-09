@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image} from "react-native";
+import { View, Image} from "react-native";
 
 
 const UserImageMessage = ({ message }) => (
@@ -11,6 +11,7 @@ const UserImageMessage = ({ message }) => (
       borderBottomLeftRadius: 24,
       height: 270,
       width:270,
+      
     }}
   >
     <Image

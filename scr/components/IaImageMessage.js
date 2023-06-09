@@ -1,4 +1,4 @@
-import { StyleSheet, Image, View } from "react-native";
+import { Image, View } from "react-native";
 
 const IaImageMessage = ({ message }) => (
   <View
@@ -25,4 +25,3 @@ const IaImageMessage = ({ message }) => (
 
 export { IaImageMessage };
 
-//const styles = StyleSheet.create({});

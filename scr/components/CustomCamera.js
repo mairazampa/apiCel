@@ -1,10 +1,9 @@
-import { Camera, CameraType, getAvailablePictureSizesAsync } from "expo-camera";
+import { Camera, CameraType } from "expo-camera";
 import { useRef, useState } from "react";
-import { ROUTES } from "../navegation/routes";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { ROUTES } from "../navegation/routes";
 import {
   Button,
-  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -72,7 +71,10 @@ const CustomCamera = () => {
       ) : (
         <View style={[styles.box, { backgroundColor: "grey" }]} />
       )} */}
-    </View>
+   
+    <Button title="volver"
+    onPress={() => navigation.navigate(ROUTES.IMAGE)}     
+/></View>
   );
 };
 

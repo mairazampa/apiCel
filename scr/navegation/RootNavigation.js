@@ -5,7 +5,6 @@ import { HomeScreen } from "../screen/HomeScreen";
 import { ChatScreen } from "../screen/ChatScreen";
 import { ROUTES } from "./routes";
 import { ImageScreen } from "../screen/ImageScreen";
-
 import { CameraScreen } from "../screen/CameraScreen";
 import { Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -15,7 +14,6 @@ const ImageStack = createStackNavigator();
 const ImageNavigator = () => (
   <ImageStack.Navigator screenOptions={{ headerShown: false }}>
     <ImageStack.Screen name={ROUTES.IMAGE} component={ImageScreen} /> 
-   
     <ImageStack.Screen name={ROUTES.CAMERA} component={CameraScreen} />
   </ImageStack.Navigator>
 );
@@ -69,7 +67,6 @@ const TabNavigator = () => (
     />
     <Tab.Screen
       name={ROUTES.IMAGE}
-      //component={ImageScreen}
       component={ImageNavigator}
       options={{
         tabBarIcon: ({ focused }) => (
