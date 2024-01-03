@@ -75,7 +75,7 @@ const scrollViewRef = useRef(null);
 
 
 
-       chatMessages.concat({ message: (chatMessages), isUser: false })
+       
   
 
   return (
