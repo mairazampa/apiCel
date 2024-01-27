@@ -29,6 +29,14 @@ const homeCardLinkData = [
     accionTexto: "creá",
     routeName: ROUTES.IMAGE,
   },
+  {
+    colorFondo: "#E2FFE5",
+    colorAccionTexto: "#55CB59",
+    titulo: "Sala Comun",
+    subtitulo: "Sala comun de chat",
+    accionTexto: "comparti",
+    routeName: ROUTES.IMAGE,
+  },
 ];
 
 
@@ -59,6 +67,7 @@ const homeCardLinkData = [
           description: "Img. gen.",
           routeName: ROUTES.IMAGE,
         },
+        
       ]);
     };
   

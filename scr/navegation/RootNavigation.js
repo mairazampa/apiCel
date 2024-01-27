@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { HomeScreen } from "../screen/HomeScreen";
 import { ChatScreen } from "../screen/ChatScreen";
+import { SalaScreen } from "../screen/SalaScreen";
 import { ROUTES } from "./routes";
 import { ImageScreen } from "../screen/ImageScreen";
 import { CameraScreen } from "../screen/CameraScreen";
@@ -15,6 +16,7 @@ const ImageNavigator = () => (
   <ImageStack.Navigator screenOptions={{ headerShown: false }}>
     <ImageStack.Screen name={ROUTES.IMAGE} component={ImageScreen} /> 
     <ImageStack.Screen name={ROUTES.CAMERA} component={CameraScreen} />
+    <ImageStack.Screen name={ROUTES.SALA} component={SalaScreen} />
   </ImageStack.Navigator>
 );
 
@@ -71,6 +73,15 @@ const TabNavigator = () => (
       options={{
         tabBarIcon: ({ focused }) => (
           <CustomTabBarIcon focused={focused} iconName="image" label="IMAGE" />
+        ),
+      }}
+    />
+    <Tab.Screen
+      name={ROUTES.SALA}
+      component={SalaScreen}
+      options={{
+        tabBarIcon: ({ focused }) => (
+          <CustomTabBarIcon focused={focused} iconName="chatbubbles-outline" label="SALA" />
         ),
       }}
     />

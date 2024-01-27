@@ -6,6 +6,7 @@ const ROUTES = {
     TEST: "/test",
     IMAGE_CHANNEL: "/image/channel",
     CAMERA: "/image/camera",
+    SALA: "/sala",
   };
   
   export { ROUTES };
