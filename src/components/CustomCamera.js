@@ -1,23 +1,19 @@
-import { Camera, CameraType } from "expo-camera";
+import { CameraView, useCameraPermissions } from "expo-camera";
+import { CameraType } from "expo-image-picker";
+import { router, Stack } from "expo-router";
 import { useRef, useState } from "react";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { ROUTES } from "../navegation/routes";
 import {
   Button,
   StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
+  View
 } from "react-native";
-import { manipulateAsync } from "expo-image-manipulator";
 
 const CustomCamera = () => {
-  const navigation = useNavigation();
-  const params = useRoute().params;
+//   const params = useRoute().params;
   const camera = useRef(null);
   const [image, setImage] = useState(null);
   const [type, setType] = useState(CameraType.back);
-  const [permission, requestPermission] = Camera.useCameraPermissions();
+  const [permission, requestPermission] = useCameraPermissions();
 
   if (!permission) {
     // Camera permissions are still loading
@@ -55,7 +51,7 @@ const CustomCamera = () => {
       setImage(resized.uri);
       console.log("que es resized.uri",resized.uri);
       params?.addUserImage(resized.uri);
-      navigation.goBack();
+      router.back();
     } else {
       console.warn("Cámara no lista");
     }
@@ -63,18 +59,14 @@ const CustomCamera = () => {
 
   return (
     <View style={{ gap: 10 }}>
-      <Camera ref={camera} style={styles.box} type={type} ratio="1:1" />
+      <Stack.Screen options={{ headerShown: false }} />
+      <CameraView ref={camera} style={styles.box} type={type} ratio="1:1" />
       <Button title="Cambiar cámara" color="#841584" onPress={toggleCameraType} />
       <Button title="Tomar Foto" onPress={takePicture} />
-      {/* {image !== null ? (
-        <Image source={{ uri: image }} style={styles.box} />
-      ) : (
-        <View style={[styles.box, { backgroundColor: "grey" }]} />
-      )} */}
+
    
-    <Button title="volver"
-    onPress={() => navigation.navigate(ROUTES.IMAGE)}     
-/></View>
+    <Button title="volver" onPress={() => router.push("/image-camera")} />
+</View>
   );
 };
 

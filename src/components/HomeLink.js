@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View } from "react-native";
 import { useFonts } from "expo-font";
+import { StyleSheet, Text, View } from "react-native";
 
 const HomeLink = ({
   colorFondo,
@@ -9,8 +9,8 @@ const HomeLink = ({
   accionTexto,
 }) => {
   const [fontsLoaded] = useFonts({
-    "DM Sans Bold": require("../../assets/fonts/DMSans/DMSans-Bold.ttf"),
-    "DM Sans Medium": require("../../assets/fonts/DMSans/DMSans-Medium.ttf"),
+    "DM Sans Bold": require("@/assets/fonts/DMSans/DMSans-Bold.ttf"),
+    "DM Sans Medium": require("@/assets/fonts/DMSans/DMSans-Medium.ttf"),
   });
 
   if (!fontsLoaded) {

@@ -1,33 +1,28 @@
-import {
-  Button,
-  Image,
-  SafeAreaView,
-  Dimensions,
-  KeyboardAvoidingView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-  Keyboard,
-} from "react-native";
-import { useRef,useEffect, useState } from "react";
-import { launchImageLibraryAsync, MediaTypeOptions } from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
-import Constants from "expo-constants";
-import { Header } from "../components/Header";
-import { CustomCamera } from "../components/CustomCamera";
-import { SafeScreen } from "../components/SafeScreen";
 import {
   useIsFocused,
   useNavigation,
   useRoute,
 } from "@react-navigation/native";
-import { ROUTES } from "../navegation/routes";
-import { sendImageToChatbot } from "../services/iaservices";
-import { incrementImageResponsesCount } from "../services/cuenta";
-import { UserImageMessage } from "../components/UserImageMessage";
-import { IaImageMessage } from "../components/IaImageMessage";
 import * as ImagePicker from 'expo-image-picker';
+import { router } from "expo-router";
+import { useRef, useState } from "react";
+import {
+  Dimensions,
+  KeyboardAvoidingView,
+  ScrollView,
+  StyleSheet,
+  View
+} from "react-native";
+import { Header } from "../components/Header";
+import { IaImageMessage } from "../components/IaImageMessage";
+import { SafeScreen } from "../components/SafeScreen";
+import { UserImageMessage } from "../components/UserImageMessage";
+import { incrementImageResponsesCount } from "../services/cuenta";
+import { sendImageToChatbot } from "../services/iaservices";
+
+
+
 const ImageScreen = () => {
 const navigation = useNavigation();
 const params = useRoute().params;
@@ -114,8 +109,10 @@ const scrollViewRef = useRef(null);
                 // el objeto tiene una propiedad addUserImage con la definicion de la funcion
                 // de igual nombre
                 // de esta forma la pantalla de camara podrá usarla
-                navigation.navigate(ROUTES.CAMERA, {addUserImage: addUserImage })}
-              }
+                router.push("/camera", {
+                  params: {addUserImage: addUserImage }
+                });
+              }}
             />
             <Ionicons 
             name="image" 

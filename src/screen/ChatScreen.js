@@ -1,20 +1,20 @@
+import { Ionicons } from "@expo/vector-icons";
+import { useRef, useState } from "react";
 import {
+  Dimensions,
+  Keyboard,
   KeyboardAvoidingView,
   ScrollView,
   StyleSheet,
   TextInput,
   View,
-  Dimensions,
-  Keyboard,
 } from "react-native";
-import { Ionicons} from "@expo/vector-icons";
 import { Header } from "../components/Header";
-import { sendQuestionToChatbot } from "../services/iaservices";
-import { UserTextMessage } from "../components/UserTextMessage";
 import { IaTextMessage } from "../components/IaTextMessage";
 import { SafeScreen } from "../components/SafeScreen";
-import { useState, useRef } from "react";
+import { UserTextMessage } from "../components/UserTextMessage";
 import { incrementTextResponsesCount } from "../services/cuenta";
+import { sendQuestionToChatbot } from "../services/iaservices";
 
 
 const ChatScreen = () => {
@@ -83,7 +83,7 @@ const ChatScreen = () => {
           </View>
     
           <Ionicons.Button
-            name="ios-paper-plane-outline"
+            name="paper-plane"
             size={24}
             color="white"
             backgroundColor="#303437"

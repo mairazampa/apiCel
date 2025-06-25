@@ -17,14 +17,12 @@ const getImageResponsesCount = async () => {
 };
 
 const incrementImageResponsesCount = async () => {
+  console.log("Incrementando el contador de respuestas de imagen");
   const currentCount = await getImageResponsesCount();
   const newValue = (currentCount + 1).toString();
   return AsyncStorage.setItem("image-responses-count", newValue);
 };
 
 export {
-  getTextResponsesCount,
-  incrementTextResponsesCount,
-  getImageResponsesCount,
-  incrementImageResponsesCount,
+  getImageResponsesCount, getTextResponsesCount, incrementImageResponsesCount, incrementTextResponsesCount
 };

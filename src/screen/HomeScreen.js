@@ -1,14 +1,14 @@
-  import {Pressable,StyleSheet,Text,View} from "react-native";
-  import { useNavigation, useIsFocused } from "@react-navigation/native";
-  import { HomeLink } from "../components/HomeLink";
-  import { HomeCuadrado } from "../components/HomeCuadrado";
-  import { ROUTES } from "../navegation/routes";
-  import { SafeScreen } from "../components/SafeScreen";
-  import { useEffect, useState } from "react";
-  import {
-    getImageResponsesCount,
-    getTextResponsesCount,
-  } from "../services/cuenta";
+  import { useIsFocused } from "@react-navigation/native";
+import { router } from "expo-router";
+import { useEffect, useState } from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import { HomeCuadrado } from "../components/HomeCuadrado";
+import { HomeLink } from "../components/HomeLink";
+import { SafeScreen } from "../components/SafeScreen";
+import {
+  getImageResponsesCount,
+  getTextResponsesCount,
+} from "../services/cuenta";
   
 
   
@@ -19,7 +19,7 @@ const homeCardLinkData = [
     titulo: "Canal de texto",
     subtitulo: "Chatea con la IA",
     accionTexto: "chateá",
-    routeName: ROUTES.CHAT,
+    routeName: "/chat",
   },
   {
     colorFondo: "#F0F0FF",
@@ -27,7 +27,7 @@ const homeCardLinkData = [
     titulo: "Canal de imagen",
     subtitulo: "Imágenes desde en imágenes",
     accionTexto: "creá",
-    routeName: ROUTES.IMAGE,
+    routeName: "/image-camera",
   },
   {
     colorFondo: "#E2FFE5",
@@ -35,18 +35,17 @@ const homeCardLinkData = [
     titulo: "Sala Comun",
     subtitulo: "Sala comun de chat",
     accionTexto: "comparti",
-    routeName: ROUTES.IMAGE,
+    routeName: "/sala",
   },
 ];
 
 
   
   const HomeScreen = () => {
-    const navigation = useNavigation();
     const isFocused = useIsFocused();
     const [analalyticsCount, setAnalalyticsCount] = useState([]);
   
-    const navToScreen = (routeName) => () => navigation.navigate(routeName);
+    const navToScreen = (routeName) => () => router.push(routeName);
   
     const getCountValues = async () => {
       const textCount = await getTextResponsesCount();
@@ -54,18 +53,18 @@ const homeCardLinkData = [
   
       setAnalalyticsCount([
         {
-          key: "textCount",
+          id: "textCount",
           iconName: "chatbubbles-sharp",
           data: textCount,
           description: "Rtas gen.",
-          routeName: ROUTES.CHAT,
+          routeName: "/chat",
         },
         {
-          key: "imageCount",
+          id: "imageCount",
           iconName: "image",
           data: imageCount,
           description: "Img. gen.",
-          routeName: ROUTES.IMAGE,
+          routeName: "/image-camera",
         },
         
       ]);
@@ -99,7 +98,7 @@ const homeCardLinkData = [
             }}
           >
             {analalyticsCount.map((item) => (
-              <Pressable onPress={navToScreen(item.routeName)} key={item.titulo}>
+              <Pressable onPress={navToScreen(item.routeName)} key={item.id}>
               <HomeCuadrado {...item} />
               </Pressable>
             ))}

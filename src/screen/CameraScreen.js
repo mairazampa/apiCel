@@ -1,22 +1,8 @@
 import {
-    Button,
-    Dimensions,
-    Image,
-    KeyboardAvoidingView,
-    SafeAreaView,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
-  } from "react-native";
-  import { Ionicons } from "@expo/vector-icons";
-  import { launchImageLibraryAsync, MediaTypeOptions } from "expo-image-picker";
-  import { useState } from "react";
-  import Constants from "expo-constants";
-  import { CustomCamera } from "../components/CustomCamera";
-  import { SafeScreen } from "../components/SafeScreen";
-  import { Header } from "../components/Header";
+  StyleSheet
+} from "react-native";
+import { CustomCamera } from "../components/CustomCamera";
+import { SafeScreen } from "../components/SafeScreen";
   
   const CameraScreen = () => {
     return (
