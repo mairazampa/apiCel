@@ -1,98 +1,112 @@
-import { CameraView, useCameraPermissions } from "expo-camera";
-import { CameraType } from "expo-image-picker";
-import { router, Stack } from "expo-router";
-import { useRef, useState } from "react";
-import {
-  Button,
-  StyleSheet,
-  View
-} from "react-native";
+import { CameraView, useCameraPermissions } from 'expo-camera';
+import { router, Stack } from 'expo-router';
+import { useLocalSearchParams } from "expo-router";
+import React, { useRef, useState } from 'react';
+import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
-const CustomCamera = () => {
-//   const params = useRoute().params;
-  const camera = useRef(null);
-  const [image, setImage] = useState(null);
-  const [type, setType] = useState(CameraType.back);
+
+export default function CustomCamera() {
   const [permission, requestPermission] = useCameraPermissions();
-
-  if (!permission) {
-    // Camera permissions are still loading
-    return null;
-  }
-
-  console.log(permission);
+  const cameraRef = useRef(null);
+  const [facing, setFacing] = useState('back'); // cambiamos camara
+  const { imageCallbackId } = useLocalSearchParams();
+ 
+  if (!permission) return <View />;
   if (!permission.granted) {
-    // Camera permissions are not granted yet
     return (
       <View style={styles.container}>
-        <Text style={{ textAlign: "center" }}>
-          Necesitamos el acceso a la cámara
-        </Text>
-        <Button onPress={requestPermission} title="Permitir" />
+        <Text style={styles.message}>Necesitamos acceso a la cámara</Text>
+        <Button onPress={requestPermission} title="Permitir acceso" />
       </View>
     );
   }
 
-  function toggleCameraType() {
-    const newType =
-      type === CameraType.back ? CameraType.front : CameraType.back;
-    setType(newType);
-  }
-//aqca ademas de tomar la foto
-// navigation. goback volvemos a la pantalla anterior 
-//en params.addUserImage lo que hace es enviarle a una funncion de otra pantalla
-//la foto que enviamos con la nueva manipulacion solo su uri 
-  const takePicture = async () => {
-    if (camera.current) {
-      const data = await camera.current.takePictureAsync();
-      const resized = await manipulateAsync(data.uri, [
-        { resize: { height: 100 } },
-      ]);
-      setImage(resized.uri);
-      console.log("que es resized.uri",resized.uri);
-      params?.addUserImage(resized.uri);
-      router.back();
-    } else {
-      console.warn("Cámara no lista");
-    }
+  const toggleCameraFacing = () => {
+    setFacing(current => (current === 'back' ? 'front' : 'back'));
   };
 
-  return (
-    <View style={{ gap: 10 }}>
-      <Stack.Screen options={{ headerShown: false }} />
-      <CameraView ref={camera} style={styles.box} type={type} ratio="1:1" />
-      <Button title="Cambiar cámara" color="#841584" onPress={toggleCameraType} />
-      <Button title="Tomar Foto" onPress={takePicture} />
+  const takePicture = async () => {
+    if (cameraRef.current) {
+      const photo = await cameraRef.current.takePictureAsync();
+      
+      console.log('URI de la foto:', photo.uri);
 
+      if (globalThis[imageCallbackId]) {
+      globalThis[imageCallbackId](photo.uri);  
+    }
+
+      router.back();
+    } else {
+      console.warn('Cámara no lista');
+    }
+  };
+  return (
+<View style={styles.container}>
+      <Stack.Screen options={{ headerShown: false }} />
+      <CameraView ref={cameraRef} style={StyleSheet.absoluteFill} facing={facing} />
    
-    <Button title="volver" onPress={() => router.push("/image-camera")} />
-</View>
+      {/* Botones flotantes*/}
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.iconButton} onPress={toggleCameraFacing}>
+           <Ionicons name="camera-reverse" size={28} color="white" />
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.iconButton, styles.captureButton]} onPress={takePicture}>
+          <Ionicons name="camera" size={32} color="white" />
+
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.iconButton}
+          onPress={() => router.push('/image-camera')}
+        >
+          <Ionicons name="arrow-back" size={28} color="white" />
+        </TouchableOpacity>
+      </View>
+    </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
-  buttonContainer: {
-    flex: 2,
-    flexDirection: "row",
-    backgroundColor: "transparent",
-    margin: 74,
+  container: {
+    flex: 1,
+    backgroundColor: '#000',
   },
-  button: {
-    flex: 3,
-    alignSelf: "flex-end",
-    alignItems: "center",
+  permissionContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#000',
+  },
+  message: {
+    textAlign: 'center',
+    color: 'white',
+    marginBottom: 20,
+    fontSize: 16,
+  },
+  permissionButton: {
+    backgroundColor: '#841584',
+    padding: 12,
+    borderRadius: 8,
   },
   text: {
-    fontSize: 12,
-    fontWeight: "bold",
-    color: "white",
+    color: 'white',
+    fontWeight: 'bold',
   },
-  box: {
-    width: 300,
-    height: 300,
-    padding:10,
-    margin:30,
+  buttonContainer: {
+    position: 'absolute',
+    bottom: 40,
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+  },
+  iconButton: {
+    backgroundColor: '#00000080',
+    padding: 14,
+    borderRadius: 40,
+  },
+  captureButton: {
+    backgroundColor: '#1E90FF',
+    padding: 18,
   },
 });
-
-export { CustomCamera };

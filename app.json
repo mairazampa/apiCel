@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "maria-zampini-tnt-final",
-    "slug": "maria-zampini-tnt-final",
+    "name": "tnt-",
+    "slug": "tnt-",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "mariazampinitntfinal",
+    "scheme": "mairazamparinitntfinal",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -34,7 +34,7 @@
           "backgroundColor": "#ffffff"
         }
       ],
-       [
+      [
         "expo-image-picker",
         {
           "photosPermission": "Necesitamoss acceso a tus fotos para enviarla en el chat."
@@ -45,7 +45,8 @@
         {
           "cameraPermission": "Permite a $(PRODUCT_NAME) acceder a la cámara."
         }
-      ]
+      ],
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true

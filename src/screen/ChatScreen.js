@@ -13,8 +13,8 @@ import { Header } from "../components/Header";
 import { IaTextMessage } from "../components/IaTextMessage";
 import { SafeScreen } from "../components/SafeScreen";
 import { UserTextMessage } from "../components/UserTextMessage";
-import { incrementTextResponsesCount } from "../services/cuenta";
-import { sendQuestionToChatbot } from "../services/iaservices";
+import  {incrementTextResponsesCount}  from "../services/cuenta";
+import  {sendQuestionToChatbot } from "../services/iaservices";
 
 
 const ChatScreen = () => {
@@ -25,6 +25,7 @@ const ChatScreen = () => {
   const fetchApi = async (message) => {
     try {
       const answer = await sendQuestionToChatbot(message);
+      
       let mensajeFinal = answer.mensaje;
        if (!answer.error) {
         incrementTextResponsesCount();
@@ -44,6 +45,11 @@ const ChatScreen = () => {
     Keyboard.dismiss();
     if (question !== "") {
       setChatMessages(chatMessages.concat({ message: question, isUser: true }));
+      //al no estar levantado el entorno 
+      // //para que pueda incrementar lo del home
+      // // lo agregamos aca
+      
+      incrementTextResponsesCount();
       fetchApi(question);
       setQuestion("");
     }
@@ -51,6 +57,14 @@ const ChatScreen = () => {
 
   return (
     <SafeScreen>
+       <View
+          style={{
+            marginTop: 20,
+            marginHorizontal: 10,
+            gap: 20,
+            flex: 1,
+          }}
+        >
       <Header title="Canal de Texto" />
       <KeyboardAvoidingView style={{ flex: 1 }} behavior="position">
         <ScrollView
@@ -71,7 +85,7 @@ const ChatScreen = () => {
           )}
         </ScrollView>
         <View
-          style={{ flexDirection: "row", justifyContent: "center", gap: 10 }}
+          style={{ flexDirection: "row", justifyContent: "center"}}
         >
           <View style={styles.inputContainer}>
             <TextInput
@@ -93,11 +107,12 @@ const ChatScreen = () => {
           />
         </View>
       </KeyboardAvoidingView>
+      </View>
     </SafeScreen>
   );
 };
 
-export { ChatScreen };
+export {ChatScreen} ;
 
 const styles = StyleSheet.create({
   container: {

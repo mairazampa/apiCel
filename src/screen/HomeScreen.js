@@ -1,9 +1,9 @@
-  import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { HomeCuadrado } from "../components/HomeCuadrado";
-import { HomeLink } from "../components/HomeLink";
+import  {HomeCuadrado } from "../components/HomeCuadrado";
+import  {HomeLink } from "../components/HomeLink";
 import { SafeScreen } from "../components/SafeScreen";
 import {
   getImageResponsesCount,
@@ -35,7 +35,7 @@ const homeCardLinkData = [
     titulo: "Sala Comun",
     subtitulo: "Sala comun de chat",
     accionTexto: "comparti",
-    routeName: "/sala",
+    routeName: "/reunion",
   },
 ];
 
@@ -120,7 +120,7 @@ const homeCardLinkData = [
     );
   };
   
-  export { HomeScreen };
+  export { HomeScreen} ;
   
   const styles = StyleSheet.create({
     container: {

@@ -23,5 +23,5 @@ const IaImageMessage = ({ message }) => (
   </View>
 );
 
-export { IaImageMessage };
+export { IaImageMessage} ;
 

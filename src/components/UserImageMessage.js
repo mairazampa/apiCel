@@ -26,4 +26,3 @@ const UserImageMessage = ({ message }) => (
 );
 
 export { UserImageMessage };
-

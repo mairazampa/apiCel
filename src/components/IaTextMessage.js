@@ -23,6 +23,6 @@ const IaTextMessage = ({ message }) => (
   </View>
 );
 
-export { IaTextMessage };
+export { IaTextMessage};
 
 const styles = StyleSheet.create({});

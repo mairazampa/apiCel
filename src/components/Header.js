@@ -1,11 +1,12 @@
-import { StyleSheet, Text, View } from "react-native";
-import { FontAwesome5 } from "@expo/vector-icons";
-
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { FontAwesome5, MaterialIcons} from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+import { auth } from "../../config/firebase";
 import { colors } from "../theme/colors";
 
-const Header = ({ title }) => (
+const Header = ({ title, showLogout = false }) => (
   <View style={styles.container}>
-    <FontAwesome5 name="robot" size={24} color="black" />
+    <Ionicons name="logo-reddit" size={24}  />
     <View>
       <Text style={styles.headerTitle}>{title}</Text>
       <View style={styles.headerSubtitleContainer}>
@@ -13,13 +14,20 @@ const Header = ({ title }) => (
         <Text style={styles.headerSubtitleText}>Siempre activo</Text>
       </View>
     </View>
+
+    {showLogout && (
+      <TouchableOpacity onPress={() => auth.signOut()}>
+   
+        <MaterialIcons name="logout" size={24} color="black" />
+      </TouchableOpacity>
+    )}
   </View>
 );
 
 export { Header };
 
 const styles = StyleSheet.create({
-  container: {
+container: {
     flexDirection: "row",
     paddingHorizontal: 40,
     alignItems: "center",

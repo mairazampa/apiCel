@@ -14,9 +14,9 @@ import {
   StyleSheet,
   View
 } from "react-native";
-import { Header } from "../components/Header";
-import { IaImageMessage } from "../components/IaImageMessage";
-import { SafeScreen } from "../components/SafeScreen";
+import  {Header}  from "../components/Header";
+import  {IaImageMessage } from "../components/IaImageMessage";
+import  {SafeScreen} from "../components/SafeScreen";
 import { UserImageMessage } from "../components/UserImageMessage";
 import { incrementImageResponsesCount } from "../services/cuenta";
 import { sendImageToChatbot } from "../services/iaservices";
@@ -39,10 +39,11 @@ const scrollViewRef = useRef(null);
     setChatMessages((chatMessages) =>
       chatMessages.concat({ message: imageUri, isUser: true })
     );
-    sendImage(imageUri);
+   // sendImage(imageUri);
+    incrementImageResponsesCount();
     console.log("Enviamos la siguiente ruta a Send Image", imageUri)
   };
-
+   globalThis.addUserImage = addUserImage;
   //seleccionamos de la galeria 
  
   const pickImage = async () => {
@@ -50,6 +51,7 @@ const scrollViewRef = useRef(null);
     });
     if (!result.canceled) {
       addUserImage(result.assets[0].uri);
+     
     }
   };
 
@@ -67,14 +69,16 @@ const scrollViewRef = useRef(null);
     );
   };
    
-
-
-
-       
-  
-
   return (
     <SafeScreen>
+       <View
+          style={{
+            marginTop: 20,
+            marginHorizontal: 10,
+            gap: 20,
+            flex: 1,
+          }}
+        >
       <Header title="Canal de Imagen" />
       <KeyboardAvoidingView style={{ flex: 1 }} behavior="position">
         <ScrollView
@@ -109,9 +113,9 @@ const scrollViewRef = useRef(null);
                 // el objeto tiene una propiedad addUserImage con la definicion de la funcion
                 // de igual nombre
                 // de esta forma la pantalla de camara podrá usarla
-                router.push("/camera", {
-                  params: {addUserImage: addUserImage }
-                });
+               // router.push("/camera");
+                router.push({ pathname: "/camera", params: { imageCallbackId: "addUserImage" } });
+
               }}
             />
             <Ionicons 
@@ -124,6 +128,7 @@ const scrollViewRef = useRef(null);
           </View>
         </View>
       </KeyboardAvoidingView>
+      </View>
     </SafeScreen>
   );
 };
@@ -156,4 +161,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export { ImageScreen };
+export {ImageScreen} ;
