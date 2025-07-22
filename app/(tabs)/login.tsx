@@ -21,17 +21,15 @@ import * as AuthSession from "expo-auth-session";
 import  { auth }  from "@/config/firebase";
 import { useRouter } from "expo-router";
 import { SafeScreen } from "@/src/components/SafeScreen";
-//import { Header } from "@/src/components/Header";
 
 WebBrowser.maybeCompleteAuthSession();
 const LoginScreen= () => {
-  //const redirectUri = AuthSession.makeRedirectUri();
-//export default function LoginScreen() {
+  
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const [mode, setMode] = useState("login"); // "login" o "register"
+  const [mode, setMode] = useState("login"); 
 const redirectUri = "https://auth.expo.io/@zamparini/tnt-";
   const [request, response, promptAsync] = Google.useAuthRequest({
     clientId:
@@ -51,7 +49,7 @@ const redirectUri = "https://auth.expo.io/@zamparini/tnt-";
       if (accessToken) {
         const credential = GoogleAuthProvider.credential(null, accessToken);
        signInWithCredential(auth, credential).catch((err) =>
-      //     signInWithCredential( credential).catch((err) =>
+
           alert("Error al iniciar sesión con Google: " + err.message)
         );
       }
@@ -61,7 +59,7 @@ const redirectUri = "https://auth.expo.io/@zamparini/tnt-";
   useEffect(() => {
     if (!auth) return;
   const unsubscribe = onAuthStateChanged(auth, (user) => {
-  //    const unsubscribe = onAuthStateChanged( (user) => {
+
       if (user) router.replace("/reunion");
     });
     return unsubscribe;
@@ -74,17 +72,15 @@ const redirectUri = "https://auth.expo.io/@zamparini/tnt-";
         alert("Error: " + err.message)
       );
     } else {
-   //   createUserWithEmailAndPassword(auth, email, password).catch((err) =>
-     //   alert("Error al registrarse: " + err.message)
-     // );
+ 
      createUserWithEmailAndPassword(auth, email, password)
-     // createUserWithEmailAndPassword( email, password)
+     
   .then((userCredential) => {
     return updateProfile(userCredential.user, {
       displayName: name,
       }).then(() => {
       alert("Registro exitoso");
-   //   router.replace("/reunion");
+
       router.replace("/salita");
     });
   })

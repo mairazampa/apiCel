@@ -51,16 +51,7 @@ export default function SalitaScreen() {
 const sendMessage = () => {
     if (!message.trim() || !currentUser) return;
 
- //   const messagesRef = ref(database, "chat");
-  //  push(messagesRef, {
-   //   text: message.trim(),
- //     uid: currentUser.uid,
-  //    email: currentUser.email,
-   //   name: currentUser.displayName ?? "Usuario"//,
-//      createdAt: Date.now(),
-//    }).catch((error) => {
- //     console.error("Error al enviar mensaje:", error);
-//    });
+
 
     setMessage("");
   };

@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState, useRef, useEffect } from 'react';
-
+import { Header } from "../components/Header";
 
 import { useIsFocused } from '@react-navigation/native';
 import { auth, database } from "../../config/firebase";
@@ -18,7 +18,7 @@ import { ref, set, onValue, push } from "firebase/database"
 
 const SalaScreen = () => {
     // Messages
-    const [text, setText] = useState(""); // IMPORTANTE: setState = Admite un valor o una función
+    const [text, setText] = useState(""); 
     const [msgs, setMsgs] = useState([]);
     const scrollViewRef = useRef(null);
     // Auth
@@ -28,13 +28,13 @@ const SalaScreen = () => {
     // Both
     const isFocused = useIsFocused();
 
-    // Carga OKEY: https://console.firebase.google.com/project/chat-ia-movil-1642d/database/chat-ia-movil-1642d-default-rtdb/data?hl=es
+    
     const sendText = async (message) => {
         try {
-            // No logré utilizar Moment Js...
+        
             const currentDate = new Date();
 
-            // Obtiene cada componente de la fecha con ceros adicionales cuando sea necesario
+         
             const year = currentDate.getFullYear();
             const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
             const day = currentDate.getDate().toString().padStart(2, '0');
@@ -64,7 +64,7 @@ const SalaScreen = () => {
     };
 
     const checkUserLoggedIn = async () => {
-        //
+        
         try {
             // console.log("auth", auth);
             const currentUser = await auth.currentUser;
@@ -73,7 +73,7 @@ const SalaScreen = () => {
                 setUsername(currentUser.email.split('@')[0]);
             }
             else setUser(false);
-            // console.log("currentUser: ", currentUser.email)
+          
         } catch (error) {
             console.error("Error while checking user:", error);
             setUser(false); // Si hay un error, establece el usuario como no autenticado
@@ -86,11 +86,10 @@ const SalaScreen = () => {
         const messagesRef = await ref(database, "messages/");
         onValue(messagesRef, (snapshot) => {
             if (snapshot.val()) {
-                let msgsUpdated = []; // Initialize msgsUpdated here
+                let msgsUpdated = []; 
                 Object.keys(snapshot.val()).forEach(key => {
                     const msg = snapshot.val()[key];
-                    // console.log(`USER: ${msg.user}, TEXT: ${msg.text}`);
-                    // console.log("msg.user: ", msg.user, "username:", username, " = ", msg.user == username);
+                 
                     msgsUpdated = msgsUpdated.concat({ 
                         key: key,
                         text: msg.text, 
@@ -99,7 +98,7 @@ const SalaScreen = () => {
                         isUser: msg.user == username 
                     });
                 });
-                // msgsUpdated.reverse();                          
+                                    
                 setMsgs(msgsUpdated);
             }
         });
@@ -107,7 +106,7 @@ const SalaScreen = () => {
 
     useEffect(() => {
         if (isFocused) {
-            // console.log("Screen Focused", isFocused);
+         
             checkUserLoggedIn();
             
             getMsgs();
@@ -126,17 +125,26 @@ const SalaScreen = () => {
     return (
         <>
             {user 
-                ? <View style={styles.container}>
-                    {/* Barra de estado */}
-                    <Header title="Sala común" />
-                    <KeyboardAvoidingView style={{ flex: 1 }} >
+                ? <View
+          style={{
+            marginTop: 20,
+            marginHorizontal: 10,
+            gap: 20,
+            flex: 1,
+          }}
+        >
+                 
+                    <Header title="Sala común" showLogout/>
+                   <KeyboardAvoidingView style={{ flex: 1 }} behavior="position">
                         <ScrollView
-                            style={styles.scrollView}
-                            contentContainerStyle={{ gap: 20 }}
-                            ref={scrollViewRef}
-                            onContentSizeChange={() => scrollViewRef.current.scrollToEnd({ animated: true })}
-                        >
-                           
+                                 style={styles.messagesContainer}
+                                 contentContainerStyle={{ gap: 20 , paddingBottom: 20}}
+                                 //lo usamos para que los mensajes vayan subiendo 
+                                 //asi no tenemos que bajar cada vez que enviamos una consulta
+                                 ref={scrollViewRef}
+                                 onContentSizeChange={() =>
+                                   scrollViewRef.current.scrollToEnd({ animated: true })
+                                 }>
                             <Text>{user}</Text>
                         </ScrollView>
 

@@ -114,11 +114,6 @@ const Salita = ({ user }) => {
             <Button title="Enviar" onPress={sendMessage} />
           </View>
 
-          {/* Cerrar sesión abajo de todo 
-          <View style={{ marginTop: 10 }}>
-            <Button title="Cerrar sesión" onPress={() => auth.signOut()} />
-          </View>
-*/}
 </KeyboardAvoidingView>
           
         </View>

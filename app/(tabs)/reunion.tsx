@@ -16,5 +16,5 @@ export default function SalaScreen() {
     return unsubscribe;
   }, []);
 
-  return null; // o un loader si querés mostrar algo mientras espera
+  return null; 
 }

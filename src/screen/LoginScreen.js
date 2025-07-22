@@ -17,20 +17,18 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import { updateProfile } from "firebase/auth";
-
-//import  { auth }  from "../../config/firebase";
 import { useRouter } from "expo-router";
 import { SafeScreen } from "../components/SafeScreen";
 
 WebBrowser.maybeCompleteAuthSession();
 const LoginScreen= () => {
   
-//export default function LoginScreen() {
+
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const [mode, setMode] = useState("login"); // "login" o "register"
+  const [mode, setMode] = useState("login"); 
 
   const [request, response, promptAsync] = Google.useAuthRequest({
     expoClientId:
@@ -47,7 +45,7 @@ const LoginScreen= () => {
       const accessToken = response.authentication?.accessToken;
       if (accessToken) {
         const credential = GoogleAuthProvider.credential(null, accessToken);
-       // signInWithCredential(auth, credential).catch((err) =>
+   
            signInWithCredential( credential).catch((err) =>
           alert("Error al iniciar sesión con Google: " + err.message)
         );
@@ -56,8 +54,7 @@ const LoginScreen= () => {
   }, [response]);
 
   useEffect(() => {
-//    if (!auth) return;
- //   const unsubscribe = onAuthStateChanged(auth, (user) => {
+
       const unsubscribe = onAuthStateChanged( (user) => {
       if (user) router.replace("/salita");
     });
@@ -71,17 +68,14 @@ const LoginScreen= () => {
         alert("Error: " + err.message)
       );
     } else {
-   //   createUserWithEmailAndPassword(auth, email, password).catch((err) =>
-     //   alert("Error al registrarse: " + err.message)
-     // );
-  //   createUserWithEmailAndPassword(auth, email, password)
+ 
       createUserWithEmailAndPassword( email, password)
   .then((userCredential) => {
     return updateProfile(userCredential.user, {
       displayName: name,
       }).then(() => {
       alert("Registro exitoso");
-   //   router.replace("/reunion");
+
       router.replace("/salita");
     });
   })

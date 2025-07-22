@@ -71,9 +71,7 @@ export default function TabLayout() {
   //  tabBarStyle: { display: "none" },
   }}
 />
-        {/* Ocultar estas rutas del Tab Bar 
-  <Tabs.Screen name="salita" options={{ href: null }} />
-  <Tabs.Screen name="login" options={{ href: null }} />*/}
+        
     </Tabs>
       
    
